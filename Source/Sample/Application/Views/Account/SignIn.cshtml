@@ -1,0 +1,28 @@
+﻿@model SignInViewModel
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4">Sign in</h1>
+	</div>
+	<div class="card-body">
+		<p>Select one of the following signin methods.</p>
+		<ul class="authentication-schemes list-group">
+			<li class="list-group-item">
+				<partial name="ValidationSummary" />
+				<partial model="@Model.Form" name="SignInForm" />
+			</li>
+			@foreach(var authenticationScheme in Model.AuthenticationSchemes)
+			{
+				<li class="list-group-item">
+					<a asp-action="Remote" asp-controller="Authenticate" asp-route-authenticationScheme="@authenticationScheme.Name" asp-route-returnUrl="@Model.Form.ReturnUrl">
+						<h2 class="h6">
+							<svg class="size-1-point-4-rem" role="presentation">
+								<use xlink:href="/Style/Icons/sprite.svg#@authenticationScheme.Name.ToLowerInvariant()" />
+							</svg>
+							<span class="font-weight-light">Sign in-with</span>&nbsp;@authenticationScheme.Name
+						</h2>
+					</a>
+				</li>
+			}
+		</ul>
+	</div>
+</div>

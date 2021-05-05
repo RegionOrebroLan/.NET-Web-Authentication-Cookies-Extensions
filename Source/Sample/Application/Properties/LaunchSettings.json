@@ -1,0 +1,38 @@
+{
+	"profiles": {
+		"Development (no ticket-store)": {
+			"applicationUrl": "https://localhost:5001",
+			"commandName": "Project",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development",
+				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
+			},
+			"launchBrowser": true
+		},
+		"Sqlite": {
+			"applicationUrl": "https://localhost:5001",
+			"commandName": "Project",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Sqlite",
+				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
+			},
+			"launchBrowser": true
+		},
+		"SqlServer": {
+			"applicationUrl": "https://localhost:5001",
+			"commandName": "Project",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "SqlServer",
+				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
+			},
+			"launchBrowser": true
+		},
+		"Docker": {
+			"commandName": "Docker",
+			"launchBrowser": true,
+			"launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+			"publishAllPorts": true,
+			"useSSL": true
+		}
+	}
+}

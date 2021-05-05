@@ -1,0 +1,27 @@
+﻿@model SignInForm
+<form asp-action="SignIn" asp-controller="Account">
+	<input asp-for="ReturnUrl" type="hidden" />
+	<div class="form-group">
+		<label asp-for="UserName"></label>
+		<input asp-for="UserName" autofocus="autofocus" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="Password"></label>
+		<input asp-for="Password" class="form-control" />
+	</div>
+	<div class="form-group">
+		<div class="form-check">
+			<input asp-for="Persistent" class="form-check-input" />
+			<label asp-for="Persistent" class="form-check-label"></label>
+		</div>
+	</div>
+	<div class="text-right">
+		<button class="btn btn-primary" type="submit">
+			Sign in
+		</button>
+		<button class="btn btn-secondary" name="@nameof(Model.Cancel)" value="@true.ToString()">
+			Cancel
+		</button>
+	</div>
+	<small class="form-text text-muted">In this environment, you can sign in with the following combinations: Alice/Alice or Bob/Bob</small>
+</form>
