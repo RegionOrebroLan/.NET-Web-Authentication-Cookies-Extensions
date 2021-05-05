@@ -2,6 +2,8 @@
 
 Additions and extensions for .NET web-authentication-cookies (ASP.NET Core).
 
+[![NuGet](https://img.shields.io/nuget/v/RegionOrebroLan.Web.Authentication.Cookies.svg?label=NuGet)](https://www.nuget.org/packages/RegionOrebroLan.Web.Authentication.Cookies)
+
 ## 1 DistributedCacheTicketStore
 
 The DistributedCacheTicketStore uses DataProtection. In a load-balanced environment the DataProtection also have to be configured/setup to support load-balancing.
