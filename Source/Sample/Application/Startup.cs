@@ -67,9 +67,10 @@ namespace Application
 			AppDomain.CurrentDomain.SetDataDirectory(Path.Combine(this.HostEnvironment.ContentRootPath, "Data"));
 			JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
-			services.AddDataProtection(this.CreateCertificateResolver(), this.Configuration, this.HostEnvironment, new InstanceFactory());
-			services.AddDistributedCache(this.Configuration);
-			services.AddTicketStore(this.Configuration);
+			var instanceFactory = new InstanceFactory();
+			services.AddDataProtection(this.CreateCertificateResolver(), this.Configuration, this.HostEnvironment, instanceFactory);
+			services.AddDistributedCache(this.Configuration, this.HostEnvironment, instanceFactory);
+			services.AddTicketStore(this.Configuration, this.HostEnvironment, instanceFactory);
 
 			services
 				.AddAuthentication(options =>
@@ -113,21 +114,27 @@ namespace Application
 					};
 				});
 
-			services.AddMvc();
+			services.AddControllersWithViews();
 		}
 
 		protected internal virtual ICertificateResolver CreateCertificateResolver()
 		{
-			var services = new ServiceCollection();
+			var applicationDomain = new ApplicationHost(AppDomain.CurrentDomain, this.HostEnvironment);
+			var fileCertificateResolver = new FileCertificateResolver(applicationDomain);
+			var storeCertificateResolver = new StoreCertificateResolver();
 
-			services.AddSingleton(AppDomain.CurrentDomain);
-			services.AddSingleton<FileCertificateResolver>();
-			services.AddSingleton(this.HostEnvironment);
-			services.AddSingleton<IApplicationDomain, ApplicationHost>();
-			services.AddSingleton<ICertificateResolver, CertificateResolver>();
-			services.AddSingleton<StoreCertificateResolver>();
+			return new CertificateResolver(fileCertificateResolver, storeCertificateResolver);
 
-			return services.BuildServiceProvider().GetRequiredService<ICertificateResolver>();
+			//var services = new ServiceCollection();
+
+			//services.AddSingleton(AppDomain.CurrentDomain);
+			//services.AddSingleton<FileCertificateResolver>();
+			//services.AddSingleton(this.HostEnvironment);
+			//services.AddSingleton<IApplicationDomain, ApplicationHost>();
+			//services.AddSingleton<ICertificateResolver, CertificateResolver>();
+			//services.AddSingleton<StoreCertificateResolver>();
+
+			//return services.BuildServiceProvider().GetRequiredService<ICertificateResolver>();
 		}
 
 		#endregion

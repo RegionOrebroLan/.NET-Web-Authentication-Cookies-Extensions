@@ -1,6 +1,6 @@
 {
 	"profiles": {
-		"Development (no ticket-store)": {
+		"Default (no ticket-store)": {
 			"applicationUrl": "https://localhost:5001",
 			"commandName": "Project",
 			"environmentVariables": {
@@ -9,20 +9,38 @@
 			},
 			"launchBrowser": true
 		},
-		"Sqlite": {
+		"MemoryCache-TicketStore": {
 			"applicationUrl": "https://localhost:5001",
 			"commandName": "Project",
 			"environmentVariables": {
-				"ASPNETCORE_ENVIRONMENT": "Sqlite",
+				"ASPNETCORE_ENVIRONMENT": "MemoryCache-TicketStore",
 				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
 			},
 			"launchBrowser": true
 		},
-		"SqlServer": {
+		"Redis-DistributedCache-TicketStore": {
 			"applicationUrl": "https://localhost:5001",
 			"commandName": "Project",
 			"environmentVariables": {
-				"ASPNETCORE_ENVIRONMENT": "SqlServer",
+				"ASPNETCORE_ENVIRONMENT": "Redis-DistributedCache-TicketStore",
+				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
+			},
+			"launchBrowser": true
+		},
+		"Sqlite-DistributedCache-TicketStore": {
+			"applicationUrl": "https://localhost:5001",
+			"commandName": "Project",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Sqlite-DistributedCache-TicketStore",
+				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
+			},
+			"launchBrowser": true
+		},
+		"SqlServer-DistributedCache-TicketStore": {
+			"applicationUrl": "https://localhost:5001",
+			"commandName": "Project",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "SqlServer-DistributedCache-TicketStore",
 				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
 			},
 			"launchBrowser": true

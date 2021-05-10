@@ -1,0 +1,34 @@
+﻿<div class="card">
+	<div class="card-header">
+		<h1 class="h4 m-0 p-0">
+			<svg class="size-1-point-4-rem m-0 p-0" role="presentation">
+				<use xlink:href="/Style/Icons/sprite.svg#info" />
+			</svg>
+			Cookies
+		</h1>
+	</div>
+	<div class="card-body">
+		<h2 class="h6">Cookie and size</h2>
+		@{ var cookieHeader = Context.Request.Headers["Cookie"]; }
+		@if(cookieHeader.Any())
+		{
+			<ul class="list-group">
+				@foreach(var part in cookieHeader)
+				{
+					<li class="list-group-item">
+						<h3 class="h6">@part.Split('=').First()</h3>
+						<div class="alert alert-info mb-0">
+							@part.Length bytes
+						</div>
+					</li>
+				}
+			</ul>
+		}
+		else
+		{
+			<div class="alert alert-info">
+				<i>No cookies.</i>
+			</div>
+		}
+	</div>
+</div>

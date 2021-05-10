@@ -1,10 +1,9 @@
 using System;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
+using RegionOrebroLan.DependencyInjection;
 using RegionOrebroLan.Web.Authentication.Cookies.Configuration;
-using PostConfigureCookieAuthenticationOptions = RegionOrebroLan.Web.Authentication.Cookies.Configuration.PostConfigureCookieAuthenticationOptions;
 
 namespace RegionOrebroLan.Web.Authentication.Cookies.DependencyInjection.Extensions
 {
@@ -12,33 +11,24 @@ namespace RegionOrebroLan.Web.Authentication.Cookies.DependencyInjection.Extensi
 	{
 		#region Methods
 
-		public static IServiceCollection AddTicketStore(this IServiceCollection services, IConfiguration configuration, string configurationKey = ConfigurationKeys.TicketStorePath)
+		public static ITicketStoreBuilder AddTicketStore(this IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment, IInstanceFactory instanceFactory)
+		{
+			return services.AddTicketStore(configuration, ConfigurationKeys.TicketStorePath, hostEnvironment, instanceFactory);
+		}
+
+		public static ITicketStoreBuilder AddTicketStore(this IServiceCollection services, IConfiguration configuration, string configurationKey, IHostEnvironment hostEnvironment, IInstanceFactory instanceFactory)
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
 
-			if(configuration == null)
-				throw new ArgumentNullException(nameof(configuration));
-
-			var ticketStoreConfigurationSection = configuration.GetSection(configurationKey);
-			var ticketStoreOptions = new TicketStoreOptions();
-			ticketStoreConfigurationSection.Bind(ticketStoreOptions);
-
-			// ReSharper disable InvertIf
-			if(ticketStoreOptions.Type != null)
+			var ticketStoreBuilder = new TicketStoreBuilder(configuration, hostEnvironment, instanceFactory, services)
 			{
-				var ticketStoreType = Type.GetType(ticketStoreOptions.Type, true, true);
+				ConfigurationKey = configurationKey
+			};
 
-				if(!typeof(ITicketStore).IsAssignableFrom(ticketStoreType))
-					throw new InvalidOperationException($"The type \"{ticketStoreOptions.Type}\" does not implement \"{typeof(ITicketStore)}\".");
+			ticketStoreBuilder.Configure();
 
-				services.Configure<TicketStoreOptions>(ticketStoreConfigurationSection);
-				services.Add(new ServiceDescriptor(typeof(ITicketStore), ticketStoreType, ServiceLifetime.Singleton));
-				services.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>, PostConfigureCookieAuthenticationOptions>();
-			}
-			// ReSharper restore InvertIf
-
-			return services;
+			return ticketStoreBuilder;
 		}
 
 		#endregion

@@ -8,7 +8,6 @@ namespace RegionOrebroLan.Web.Authentication.Cookies.Configuration
 		#region Properties
 
 		public virtual ISet<string> CookieAuthenticationSchemes { get; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-		public virtual string Type { get; set; }
 
 		#endregion
 	}
