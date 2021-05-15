@@ -8,11 +8,11 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="IdentityModel" Version="5.1.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.5" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.6" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
-		<PackageReference Include="RegionOrebroLan.Caching" Version="0.0.6-alpha" />
-		<PackageReference Include="RegionOrebroLan.DataProtection" Version="0.0.5-alpha" />
+		<PackageReference Include="RegionOrebroLan.Caching" Version="0.0.7-alpha" />
+		<PackageReference Include="RegionOrebroLan.DataProtection" Version="0.0.6-alpha" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\Project\Project.csproj" />
