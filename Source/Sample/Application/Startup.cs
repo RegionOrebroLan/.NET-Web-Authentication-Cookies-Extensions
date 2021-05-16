@@ -124,17 +124,6 @@ namespace Application
 			var storeCertificateResolver = new StoreCertificateResolver();
 
 			return new CertificateResolver(fileCertificateResolver, storeCertificateResolver);
-
-			//var services = new ServiceCollection();
-
-			//services.AddSingleton(AppDomain.CurrentDomain);
-			//services.AddSingleton<FileCertificateResolver>();
-			//services.AddSingleton(this.HostEnvironment);
-			//services.AddSingleton<IApplicationDomain, ApplicationHost>();
-			//services.AddSingleton<ICertificateResolver, CertificateResolver>();
-			//services.AddSingleton<StoreCertificateResolver>();
-
-			//return services.BuildServiceProvider().GetRequiredService<ICertificateResolver>();
 		}
 
 		#endregion
