@@ -1,6 +1,8 @@
 using System;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using RegionOrebroLan.Configuration;
 using RegionOrebroLan.DependencyInjection;
@@ -51,6 +53,7 @@ namespace RegionOrebroLan.Web.Authentication.Cookies.DependencyInjection
 
 				ticketStoreOptions.Add(this);
 
+				this.Services.TryAddSingleton<IDataSerializer<AuthenticationTicket>, CryptographicAuthenticationTicketSerializer>();
 				this.Services.AddSingleton(ticketStoreOptions);
 			}
 			catch(Exception exception)

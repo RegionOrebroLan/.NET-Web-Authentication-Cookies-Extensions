@@ -15,6 +15,7 @@ namespace RegionOrebroLan.Web.Authentication.Cookies
 		{
 			this.KeyPrefix = $"{this.GetType().Name}:";
 			this.Logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+			this.LogPrefix = $"{this.GetType().FullName}.";
 		}
 
 		#endregion
@@ -23,6 +24,7 @@ namespace RegionOrebroLan.Web.Authentication.Cookies
 
 		protected internal virtual string KeyPrefix { get; }
 		protected internal virtual ILogger Logger { get; }
+		protected internal virtual string LogPrefix { get; }
 
 		#endregion
 
@@ -39,10 +41,10 @@ namespace RegionOrebroLan.Web.Authentication.Cookies
 
 		public virtual async Task<string> StoreAsync(AuthenticationTicket ticket)
 		{
-			this.Logger.LogDebugIfEnabled($"StoreAsync: authentication-scheme = \"{ticket?.AuthenticationScheme}\", identity-name = \"{ticket?.Principal?.Identity?.Name}\"");
+			this.Logger.LogDebugIfEnabled($"{this.LogPrefix}StoreAsync: authentication-scheme = \"{ticket?.AuthenticationScheme}\", identity-name = \"{ticket?.Principal?.Identity?.Name}\"");
 
 			var key = await this.CreateKeyAsync();
-			this.Logger.LogDebugIfEnabled($"StoreAsync: created key = \"{key}\"");
+			this.Logger.LogDebugIfEnabled($"{this.LogPrefix}StoreAsync: created key = \"{key}\"");
 
 			await this.RenewAsync(key, ticket);
 

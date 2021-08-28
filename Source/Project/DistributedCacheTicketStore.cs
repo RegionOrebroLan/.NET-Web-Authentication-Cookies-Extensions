@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using RegionOrebroLan.Logging.Extensions;
@@ -12,9 +11,9 @@ namespace RegionOrebroLan.Web.Authentication.Cookies
 	{
 		#region Constructors
 
-		public DistributedCacheTicketStore(IDataProtectionProvider dataProtectionProvider, IDistributedCache distributedCache, ILoggerFactory loggerFactory) : base(loggerFactory)
+		public DistributedCacheTicketStore(IDataSerializer<AuthenticationTicket> authenticationTicketSerializer, IDistributedCache distributedCache, ILoggerFactory loggerFactory) : base(loggerFactory)
 		{
-			this.DataProtector = (dataProtectionProvider ?? throw new ArgumentNullException(nameof(dataProtectionProvider))).CreateProtector(this.GetType().FullName);
+			this.AuthenticationTicketSerializer = authenticationTicketSerializer ?? throw new ArgumentNullException(nameof(authenticationTicketSerializer));
 			this.DistributedCache = distributedCache ?? throw new ArgumentNullException(nameof(distributedCache));
 		}
 
@@ -22,7 +21,7 @@ namespace RegionOrebroLan.Web.Authentication.Cookies
 
 		#region Properties
 
-		protected internal virtual IDataProtector DataProtector { get; }
+		protected internal virtual IDataSerializer<AuthenticationTicket> AuthenticationTicketSerializer { get; }
 		protected internal virtual IDistributedCache DistributedCache { get; }
 
 		#endregion
@@ -34,19 +33,19 @@ namespace RegionOrebroLan.Web.Authentication.Cookies
 			if(bytes == null)
 				return null;
 
-			return await Task.FromResult(TicketSerializer.Default.Deserialize(this.DataProtector.Unprotect(bytes)));
+			return await Task.FromResult(this.AuthenticationTicketSerializer.Deserialize(bytes));
 		}
 
 		public override async Task RemoveAsync(string key)
 		{
-			this.Logger.LogDebugIfEnabled($"RemoveAsync: key = \"{key}\"");
+			this.Logger.LogDebugIfEnabled($"{this.LogPrefix}RemoveAsync: key = \"{key}\"");
 
 			await this.DistributedCache.RemoveAsync(key);
 		}
 
 		public override async Task RenewAsync(string key, AuthenticationTicket ticket)
 		{
-			this.Logger.LogDebugIfEnabled($"RenewAsync: authentication-scheme = \"{ticket?.AuthenticationScheme}\", identity-name = \"{ticket?.Principal?.Identity?.Name}\", key = \"{key}\"");
+			this.Logger.LogDebugIfEnabled($"{this.LogPrefix}RenewAsync: authentication-scheme = \"{ticket?.AuthenticationScheme}\", identity-name = \"{ticket?.Principal?.Identity?.Name}\", key = \"{key}\"");
 
 			if(ticket == null)
 				throw new ArgumentNullException(nameof(ticket));
@@ -56,7 +55,7 @@ namespace RegionOrebroLan.Web.Authentication.Cookies
 
 			if(expires.HasValue)
 			{
-				this.Logger.LogDebugIfEnabled($"RenewAsync: setting absolute expiration to \"{expires.Value}\"");
+				this.Logger.LogDebugIfEnabled($"{this.LogPrefix}RenewAsync: setting absolute expiration to \"{expires.Value}\"");
 
 				options.SetAbsoluteExpiration(expires.Value);
 			}
@@ -68,11 +67,15 @@ namespace RegionOrebroLan.Web.Authentication.Cookies
 
 		public override async Task<AuthenticationTicket> RetrieveAsync(string key)
 		{
-			this.Logger.LogDebugIfEnabled($"RetrieveAsync: key = \"{key}\"");
+			this.Logger.LogDebugIfEnabled($"{this.LogPrefix}RetrieveAsync: key = \"{key}\"");
 
 			var bytes = await this.DistributedCache.GetAsync(key);
 
-			return await this.DeserializeAuthenticationTicketAsync(bytes);
+			var ticket = await this.DeserializeAuthenticationTicketAsync(bytes);
+
+			this.Logger.LogDebugIfEnabled($"{this.LogPrefix}RetrieveAsync: {(ticket == null ? "ticket = null" : $"ticket with identity \"{ticket.Principal?.Identity?.Name}\"")} for key \"{key}\"");
+
+			return ticket;
 		}
 
 		protected internal virtual async Task<byte[]> SerializeAuthenticationTicketAsync(AuthenticationTicket ticket)
@@ -80,7 +83,7 @@ namespace RegionOrebroLan.Web.Authentication.Cookies
 			if(ticket == null)
 				return null;
 
-			return await Task.FromResult(this.DataProtector.Protect(TicketSerializer.Default.Serialize(ticket)));
+			return await Task.FromResult(this.AuthenticationTicketSerializer.Serialize(ticket));
 		}
 
 		#endregion
