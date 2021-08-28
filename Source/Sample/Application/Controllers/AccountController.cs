@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.Models.Views.Account;
+using Application.Models.Web.Authentication;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -27,8 +28,8 @@ namespace Application.Controllers
 
 		protected internal virtual IDictionary<string, string> ValidCredentials { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 		{
-			{"Alice", "Alice"},
-			{"Bob", "Bob"}
+			{ "Alice", "Alice" },
+			{ "Bob", "Bob" }
 		};
 
 		#endregion
@@ -172,7 +173,7 @@ namespace Application.Controllers
 			{
 				if(this.ValidateCredentials(form, out var userName))
 				{
-					await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, await this.CreateClaimsPrincipalAsync(userName), new AuthenticationProperties {IsPersistent = form.Persistent});
+					await this.HttpContext.SignInAsync(AuthenticationDefaults.DefaultScheme, await this.CreateClaimsPrincipalAsync(userName), new AuthenticationProperties { IsPersistent = form.Persistent });
 
 					return this.Redirect(form.ReturnUrl);
 				}
@@ -188,10 +189,10 @@ namespace Application.Controllers
 		[AllowAnonymous]
 		public virtual async Task<IActionResult> SignOut(object _)
 		{
-			var authenticationProperties = new AuthenticationProperties {RedirectUri = this.Url.Action("SignedOut")};
+			var authenticationProperties = new AuthenticationProperties { RedirectUri = this.Url.Action("SignedOut") };
 			var authenticationShemes = new List<string>
 			{
-				CookieAuthenticationDefaults.AuthenticationScheme
+				AuthenticationDefaults.DefaultScheme
 			};
 
 			// ReSharper disable All

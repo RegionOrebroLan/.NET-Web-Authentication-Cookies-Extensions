@@ -7,7 +7,6 @@ using Application.Models.Web.Authentication;
 using Application.Models.Web.Authentication.Extensions;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -27,7 +26,7 @@ namespace Application.Controllers
 		{
 			// ReSharper disable All
 
-			var authenticateResult = await this.HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			var authenticateResult = await this.HttpContext.AuthenticateAsync(AuthenticationDefaults.DefaultSignInScheme);
 
 			if(!authenticateResult.Succeeded)
 				throw new InvalidOperationException("Authentication error.", authenticateResult.Failure);
@@ -55,8 +54,9 @@ namespace Application.Controllers
 			var claimsIdentity = (ClaimsIdentity)authenticateResult.Principal.Identity;
 			var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, claimsIdentity.AuthenticationType, claimsIdentity.NameClaimType, claimsIdentity.RoleClaimType));
 
-			await this.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-			await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, authenticateResult.Properties);
+			await this.HttpContext.SignInAsync(AuthenticationDefaults.DefaultScheme, claimsPrincipal);
+
+			await this.HttpContext.SignOutAsync(AuthenticationDefaults.DefaultSignInScheme);
 
 			return this.Redirect(returnUrl);
 

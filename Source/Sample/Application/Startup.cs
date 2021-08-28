@@ -1,7 +1,7 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Application.Models.Web.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -75,9 +75,8 @@ namespace Application
 			services
 				.AddAuthentication(options =>
 					{
-						options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-						options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-						options.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+						options.DefaultScheme = AuthenticationDefaults.DefaultScheme;
+						options.DefaultSignInScheme = AuthenticationDefaults.DefaultSignInScheme;
 					}
 				)
 				.AddCookie(options =>
@@ -85,6 +84,7 @@ namespace Application
 					options.LoginPath = "/Account/SignIn";
 					options.LogoutPath = "/Account/SignOut";
 				})
+				.AddCookie(AuthenticationDefaults.DefaultSignInScheme)
 				.AddOpenIdConnect("Google", options =>
 				{
 					options.Authority = "https://accounts.google.com";
