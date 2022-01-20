@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RegionOrebroLan.Logging.Extensions;
 
 namespace Application.Controllers
 {
@@ -36,8 +37,7 @@ namespace Application.Controllers
 
 			var message = $"The return-url \"{returnUrl}\" is invalid.";
 
-			if(this.Logger.IsEnabled(LogLevel.Error))
-				this.Logger.LogError(message);
+			this.Logger.LogErrorIfEnabled(message);
 
 			throw new InvalidOperationException(message);
 		}

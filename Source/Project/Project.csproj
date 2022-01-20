@@ -12,7 +12,7 @@
 		<FileVersion>$(VersionPrefix).0</FileVersion>
 		<LangVersion>9.0</LangVersion>
 		<RootNamespace>$(AssemblyName)</RootNamespace>
-		<TargetFrameworks>net5.0;netcoreapp3.1;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net6.0;net5.0;netcoreapp3.1;netstandard2.0</TargetFrameworks>
 		<Version>$(VersionPrefix)</Version>
 		<Version Condition="$(VersionPrereleaseName) != ''">$(Version)-$(VersionPrereleaseName)</Version>
 	</PropertyGroup>
